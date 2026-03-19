@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>未来選択ミニゲーム</title>
+<style>
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: linear-gradient(120deg, #89f7fe, #66a6ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  width: 420px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+h1 { margin-bottom: 10px; }
+
+.question {
+  font-size: 18px;
+  margin: 20px 0;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  background: #66a6ff;
+  color: white;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+.result {
+  margin-top: 20px;
+}
+
+.type {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>未来選択ゲーム</h1>
+  <div id="game"></div>
+</div>
+
+<script>
+const questions = [
+  {
+    text: "文化祭の役割、どれをやりたい？",
+    options: [
+      { text: "企画をまとめる", type: "business" },
+      { text: "デザインを考える", type: "art" },
+      { text: "機材や仕組みを作る", type: "engineering" },
+      { text: "みんなをサポート", type: "education" }
+    ]
+  },
+  {
+    text: "興味があるニュースは？",
+    options: [
+      { text: "企業や経済", type: "business" },
+      { text: "映画・音楽", type: "art" },
+      { text: "AIやロボット", type: "engineering" },
+      { text: "教育や福祉", type: "education" }
+    ]
+  },
+  {
+    text: "好きな作業は？",
+    options: [
+      { text: "計画・戦略", type: "business" },
+      { text: "表現・創作", type: "art" },
+      { text: "組み立て・実験", type: "engineering" },
+      { text: "教える・支える", type: "education" }
+    ]
+  },
+  {
+    text: "将来やってみたいのは？",
+    options: [
+      { text: "会社を動かす", type: "business" },
+      { text: "作品を作る", type: "art" },
+      { text: "技術を開発", type: "engineering" },
+      { text: "人を育てる", type: "education" }
+    ]
+  },
+  {
+    text: "得意そうなのは？",
+    options: [
+      { text: "リーダーシップ", type: "business" },
+      { text: "感性", type: "art" },
+      { text: "論理", type: "engineering" },
+      { text: "共感", type: "education" }
+    ]
+  }
+];
+
+const results = {
+  business: {
+    name: "経済・経営学部",
+    desc: "人やお金の流れを考え、社会を動かす力を学べる"
+  },
+  art: {
+    name: "芸術・デザイン学部",
+    desc: "自分の感性を活かして表現する分野"
+  },
+  engineering: {
+    name: "工学・情報学部",
+    desc: "技術やプログラミングで社会を支える"
+  },
+  education: {
+    name: "教育・福祉学部",
+    desc: "人を支え、育てることに関わる分野"
+  }
+};
+
+let index = 0;
+let score = { business:0, art:0, engineering:0, education:0 };
+
+const game = document.getElementById("game");
+
+function showQuestion() {
+  if (index >= questions.length) {
+    showResult();
+    return;
+  }
+
+  const q = questions[index];
+
+  let html = `<div class="question">${q.text}</div>`;
+  q.options.forEach(opt => {
+    html += `<button onclick="answer('${opt.type}')">${opt.text}</button>`;
+  });
+
+  game.innerHTML = html;
+}
+
+function answer(type) {
+  score[type]++;
+  index++;
+  showQuestion();
+}
+
+function showResult() {
+  let maxType = Object.keys(score).reduce((a, b) => score[a] > score[b] ? a : b);
+
+  game.innerHTML = `
+    <div class="result">
+      <div>あなたに向いている学部は</div>
+      <div class="type">${results[maxType].name}</div>
+      <div>${results[maxType].desc}</div>
+    </div>
+  `;
+}
+
+showQuestion();
+</script>
+</body>
+</html>
